@@ -22,6 +22,14 @@ public class NodeD<E> implements Serializable {
     }
 
 	
+	public NodeD(E data) {
+		
+		this.data = data;
+		this.next = null;
+		this.prev = null;
+	}
+
+	
     public NodeD(E data, NodeD<E> prev, NodeD<E> next) {
         
 		this.data = data;
