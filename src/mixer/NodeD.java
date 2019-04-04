@@ -3,41 +3,59 @@ package mixer;
 import java.io.Serializable;
 
 public class NodeD<E> implements Serializable {
-    public E data;
-    public NodeD next;
-    public NodeD prev;
 
-    public NodeD() {
+		
+	private static final long serialVersionUID = 0;
+
+	
+    public E data;
+    
+
+	public NodeD<E> next;
+    
+
+	public NodeD<E> prev;
+
+    
+	public NodeD() {
         super();
     }
 
-    public NodeD(E data, NodeD next, NodeD prev) {
-        this.data = data;
+	
+    public NodeD(E data, NodeD<E> prev, NodeD<E> next) {
+        
+		this.data = data;
         this.next = next;
         this.prev = prev;
     }
 
+	
     public E getData() {
         return data;
     }
 
+	
     public void setData(E data2) {
         this.data = data2;
     }
 
-    public NodeD getNext() {
+	
+    public NodeD<E> getNext() {
         return next;
     }
 
-    public void setNext(NodeD next) {
-        this.next = next;
+	
+    public void setNext(NodeD<E> newNext) {
+        this.next = newNext;
     }
 
-    public NodeD getPrev() {
+	
+    public NodeD<E> getPrev() {
         return prev;
     }
 
-    public void setPrev(NodeD prev) {
-        this.prev = prev;
+	
+    public void setPrev(NodeD<E> newPrev) {
+        this.prev = newPrev;
     }
 }

@@ -17,11 +17,11 @@ public class NodeCB {
         this.clipBoardNumber = clipBoardNumber;
     }
 
-    public NodeD getTopOfClipBoard() {
+    public NodeD<Character> getTopOfClipBoard() {
         return topOfClipBoard;
     }
 
-    public void setTopOfClipBoard(NodeD topOfClipBoard) {
+    public void setTopOfClipBoard(NodeD<Character> topOfClipBoard) {
         this.topOfClipBoard = topOfClipBoard;
     }
 }

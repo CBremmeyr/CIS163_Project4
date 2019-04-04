@@ -5,11 +5,19 @@ public class DoubleLinkedList<E>  {
 	/** Referance to the top node of the list */ 
     protected NodeD<E> top;
 
+	
+	private NodeD<E> cursor;
+
+	
+	private int size;
+
 	/**
 	 * Default constructor that inits an empty list.
 	 */
     public DoubleLinkedList() {
-        top = null;
+        
+		size = 0;
+		top = null;
         cursor = null;
     }
 
@@ -17,17 +25,21 @@ public class DoubleLinkedList<E>  {
 	 * Get the data at node with proided index.
 	 *
 	 * @param index location to get data from.
-	 * @return data at provided index.
+	 * @return data at provided index, if index is out of bouds then
+	 *         returns null.
 	 */
     public E get(int index) {
         
         cursor = top;
+		
+		if(index >= size) {
+			for (int i=0; i<index; ++i) {
+				cursor = cursor.getNext();
+			}
+			return cursor.getData();
+		}
 
-        for (int i = 0; i < position; i++) {
-            cursor = cursor.getNext();
-        }
-
-        return cursor.getData();
+        return data;
     }
 
 	/**
@@ -55,7 +67,7 @@ public class DoubleLinkedList<E>  {
 	 * @return the value that was removed.
 	 */
     public E deleteAt(int index) {
-        
+       return null;
     }
 
 	/**
@@ -64,14 +76,24 @@ public class DoubleLinkedList<E>  {
 	 * @param newData is the data to go into the new node.
 	 */
     public void add(E newData) {
-        
+       
+		NodeD<E> newNode = new NodeD(newData, cursor, null);
+		cursor = top;
+
+		// Go to last node
+		while(cursor.getNext() != null) {
+			cursor = cursor.getNext();
+		}
+		
+		cursor.setNext(newNode);
+		++this.size;
     }
 
     /**
      * Insert a data value at a index.
      * 
-     * @param index is the location to insert data at.
-     * @param data is the data to be inserted.
+     * @param index - the location to insert data before.
+     * @param data - the data to be inserted.
      */
     public void insertAt(int index, E data) {
         
@@ -84,6 +106,6 @@ public class DoubleLinkedList<E>  {
      * @return index of the location of first instance of 'data'.
      */
     public int search(E data) {
-        
+       return 0; 
     }
 }
