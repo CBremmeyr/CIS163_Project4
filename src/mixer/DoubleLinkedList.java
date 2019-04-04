@@ -1,19 +1,25 @@
 package mixer;
 
 public class DoubleLinkedList<E>  {
-   
+  
+	/** Referance to the top node of the list */ 
     protected NodeD<E> top;
 
-    // This instance variable is not required, however if you
-    // find it useful, then you are welcome to use it
-    protected NodeD<E> cursor;  // The current NodeD<E> in the list
-
+	/**
+	 * Default constructor that inits an empty list.
+	 */
     public DoubleLinkedList() {
         top = null;
         cursor = null;
     }
 
-    public E get(int position) {
+	/**
+	 * Get the data at node with proided index.
+	 *
+	 * @param index location to get data from.
+	 * @return data at provided index.
+	 */
+    public E get(int index) {
         
         cursor = top;
 
