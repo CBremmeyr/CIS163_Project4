@@ -6,19 +6,19 @@ import java.util.Scanner;
 
 public class Mix {
 
-    
+    /** Double linked list to hold users message in its current state */
     private DoubleLinkedList<Character> message;
     
-    
+    /** Inverses of commands performed */
     private String undoCommands;
     
     
     private Hashtable<Integer, DoubleLinkedList<Character>> clipBoards;
 
-    
+    /** Initial message from CLI input */
     private String userMessage;
     
-    
+    /** Scaneer for user input through CLI */
     private Scanner scan;
 
     
@@ -35,11 +35,13 @@ public class Mix {
 
         Mix mix = new Mix();
 
+		// Try to get initial user message
         try {
             mix.userMessage = args[0];
         }
         catch(ArrayIndexOutOfBoundsException e) {
             
+			// Inform user of misusage problem and terminate
             System.out.println("Need starting message as command line argument.");
             System.exit(1);
         }
@@ -49,8 +51,11 @@ public class Mix {
            mix.message.add(mix.userMessage.charAt(i));
         }
 
+		// Show initial message
         System.out.println("Message to mix: " + mix.userMessage);
         System.out.println();
+
+		// Start mixing command prompt
         mix.mixture();
     }
 
@@ -59,10 +64,10 @@ public class Mix {
 
         while(true) {
             
-            DisplayMessage();
+            this.displayMessage();
             System.out.print("Command: ");
 
-            // save state
+            // Save state
             DoubleLinkedList<Character> currMessage =  new DoubleLinkedList<>();
             String currUndoCommands = undoCommands;
 
@@ -73,16 +78,9 @@ public class Mix {
                 switch (command) {
                 case "Q":
                     
-                    System.out.println("In Q cmd");
-
-                    if(scan.hasNext()) {
-                        save(scan.next());
-                        System.out.println ("Final mixed up message: \"" + message+"\"");
-                        System.exit(0);
-                    }
-                    else {
-                        System.out.println("Command Q requires a file name to save to.");
-                    }
+                    save(scan.next());
+                    System.out.println ("Final mixed up message: \"" + message+"\"");
+                    System.exit(0); 
                     break;
 
                 case "b":
@@ -110,6 +108,22 @@ public class Mix {
                     break;
 
                 case "d":
+					String param = scan.next();
+					
+					// Invalid parameter for command
+					if(param.length() > 1) {
+						System.out.println("Command parameter '" + param +
+							 "' is too long to be valid, must be a char");
+					}
+					char toRemove = param.charAt(0);
+
+					for(int i=0; i<message.size(); ++i) {
+						char temp = message.get(i);
+						if(temp == toRemove) {
+							message.deleteAt(i);
+							// TODO: record inverse command
+						}
+					}
 
                     break;
 
@@ -122,6 +136,10 @@ public class Mix {
                     System.out.println("Invalid command: " + command);
                     break;
                 }
+
+				// Add inverse commands to list of undo commands
+				addUndoCmd(command);
+
                 scan.nextLine();   // should flush the buffer
                 System.out.println("For demonstration purposes only:\n" + undoCommands);
             }
@@ -133,9 +151,8 @@ public class Mix {
 
                 // Restore state
                 undoCommands = currUndoCommands;
-                message = currMessage ;
+                message = currMessage;
             }
-
         }
     }
 
@@ -179,11 +196,17 @@ public class Mix {
     private void insertbefore(String token, int index) {
         
         for(int i=0; i <token.length(); ++i) {
+			
+			this.displayMessage();
+
             message.insertAt(index+i, token.charAt(i));
         }
     }
 
-    private void DisplayMessage() {
+	/**
+	 * Display message to CLI with index over each character.
+	 */
+    private void displayMessage() {
         
         System.out.print ("Message:\n");
         userMessage = message.toString();
@@ -196,6 +219,7 @@ public class Mix {
         System.out.format ("\n");
     }
 
+	
     public void save(String filename) {
 
         PrintWriter out = null;
@@ -209,6 +233,16 @@ public class Mix {
         out.println(undoCommands);
         out.close();
     }
+
+	/**
+	 * Find inverse of provided command and add to list of undo commands.
+	 *
+	 * @param command - command to find inverse of and record.
+	 */
+	private void addUndoCmd(String command) {
+
+		
+	}
 
     /**
      * Print the command help information to the console.

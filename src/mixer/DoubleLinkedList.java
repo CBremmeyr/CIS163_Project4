@@ -73,7 +73,7 @@ public class DoubleLinkedList<E>  {
     /**
      * Add a new node at the end of the list.
      *
-     * @param newData is the data to go into the new node.
+     * @param newData - the data to go into the new node.
      */
     public void add(E newData) {
        
@@ -180,4 +180,9 @@ public class DoubleLinkedList<E>  {
 
         return -1;
     }
+
+	
+	public int size() {
+		return size;
+	}
 }
