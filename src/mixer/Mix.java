@@ -34,7 +34,21 @@ public class Mix {
     public static void main(String[] args) {
 
         Mix mix = new Mix();
-        mix.userMessage = args[0];
+
+        try {
+            mix.userMessage = args[0];
+        }
+        catch(ArrayIndexOutOfBoundsException e) {
+            
+            System.out.println("Need starting message as command line argument.");
+            System.exit(1);
+        }
+
+        // Init message list to inputed string
+        for(int i=0; i < mix.userMessage.length(); ++i) {
+           mix.message.add(mix.userMessage.charAt(i));
+        }
+
         System.out.println("Message to mix: " + mix.userMessage);
         System.out.println();
         mix.mixture();
@@ -58,9 +72,17 @@ public class Mix {
 
                 switch (command) {
                 case "Q":
-                    save(scan.next());
-                    System.out.println ("Final mixed up message: \"" + message+"\"");
-                    System.exit(0);
+                    
+                    System.out.println("In Q cmd");
+
+                    if(scan.hasNext()) {
+                        save(scan.next());
+                        System.out.println ("Final mixed up message: \"" + message+"\"");
+                        System.exit(0);
+                    }
+                    else {
+                        System.out.println("Command Q requires a file name to save to.");
+                    }
                     break;
 
                 case "b":
@@ -119,6 +141,7 @@ public class Mix {
 
     private void remove(int start, int stop) {
 
+        
     }
 
     private void cut(int start, int stop, int clipNum) {
@@ -155,7 +178,7 @@ public class Mix {
      */
     private void insertbefore(String token, int index) {
         
-        for(int i=0; i<token.length(); ++i) {
+        for(int i=0; i <token.length(); ++i) {
             message.insertAt(index+i, token.charAt(i));
         }
     }
@@ -176,9 +199,9 @@ public class Mix {
     public void save(String filename) {
 
         PrintWriter out = null;
+
         try {
             out = new PrintWriter(new BufferedWriter(new FileWriter(filename)));
-
         } catch (IOException e) {
             e.printStackTrace();
         }

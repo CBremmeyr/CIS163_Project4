@@ -80,6 +80,11 @@ public class DoubleLinkedList<E>  {
         NodeD<E> newNode = new NodeD<E>(newData, cursor, null);
         cursor = top;
 
+        if(cursor == null) {
+            top = newNode;
+            return;
+        }
+
         // Go to last node
         while(cursor.getNext() != null) {
             cursor = cursor.getNext();
@@ -103,6 +108,7 @@ public class DoubleLinkedList<E>  {
     
         NodeD<E> newNode = new NodeD<E>(data);
         cursor = top;
+        ++size;
 
         // Instering at head of list 
         if(index == 0) {

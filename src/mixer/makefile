@@ -1,2 +1,2 @@
 all: *.java
-	javac -Xlint *.java
+	javac -g -Xlint *.java
