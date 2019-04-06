@@ -223,32 +223,103 @@ public class Mix {
 					copy(index1, index2, index3);
                    	break;
 
+				// x [CLIPBOARD_INDEX] [START_INDEX] [STOP_INDEX]
                 case "x":
-    	            cut(scan.nextInt(), scan.nextInt(), scan.nextInt());
-        	        break;
 
-                case "p":
-               	    paste(scan.nextInt(), scan.nextInt());
+					// Verrify that inputs are valid
+					if(parsedInput.length != 4) {
+
+						// Incorrect amount of arguments
+						System.out.println("Incorrect number of command arguments.");
+						break;
+					}
+
+					// Check that all inputs are integers
+					if(!parsedInput[1].matches(intRegx) || !parsedInput[2].matches(intRegx) || 
+					   !parsedInput[3].matches(intRegx)) {
+						
+						// Not all inputs are integers
+						System.out.println("All arguments must be integers.");
+						break;
+					}
+
+					// Convert arguments to integers
+					index1 = Integer.parseInt(parsedInput[1]);
+					index2 = Integer.parseInt(parsedInput[2]);
+					index3 = Integer.parseInt(parsedInput [3]);
+
+					// Check that message indexes are in valid range
+					if(!message.validIndex(index2) || !message.validIndex(index3)) {
+						System.out.println("Second and/or third argument is an invalid index for the message.");
+					}
+
+					// TODO: check if clipboard index is correct
+
+					// Apply command
+					cut(index1, index2, index3);
                    	break;
 
+				// p [CLIPBOARD_INDEX] [START_INDEX]
+                case "p":
+
+
+					// Verrify that inputs are valid
+					if(parsedInput.length != 3) {
+
+						// Incorrect amount of arguments
+						System.out.println("Incorrect number of command arguments.");
+						break;
+					}
+
+					// Check that all inputs are integers
+					if(!parsedInput[1].matches(intRegx) || !parsedInput[2].matches(intRegx)) {
+						
+						// Not all inputs are integers
+						System.out.println("All arguments must be integers.");
+						break;
+					}
+
+					// Convert arguments to integers
+					index1 = Integer.parseInt(parsedInput[1]);
+					index2 = Integer.parseInt(parsedInput[2]);
+					
+					// Check that message indexes are in valid range
+					if(!message.validIndex(index2)) {
+						System.out.println("Second argument is an invalid index for the message.");
+					}
+
+					// TODO: check if clipboard index is correct
+
+					// Apply command
+					paste(index1, index2);
+                   	break;
+
+				// h
 	            case "h":
    	                helpPage();
        	            break;
 
+				// d [CHAR]
             	case "d":
-					String param = scan.next();	
-	
-					// Invalid parameter for command
-					if(param.length() > 1) {
-						System.out.println("Command parameter '" + param +
-								 "' is too long to be valid, must be a char");
+
+					// Verrify parameters for command
+					if(parsedInput.length != 2) {
+						System.out.println("Incorrect number of arguments for command");
 					}
-	
-					char toRemove = param.charAt(0);
-	
+
+					// Check that argument is a single character
+					if(parsedInput[1].length() != 1) {
+						System.out.println("Argument must be a single character.");
+					}
+
+					// Get character that is being deleted from the message
+					char toRemove = parsedInput[1].charAt(0);
+
+					// Delete all instances in the meesage
 					for(int i=0; i<message.size(); ++i) {
 						char temp = message.get(i).toString().charAt(0);
 
+						// If the current char should be deleted
 						if(temp == toRemove) {
 
 							message.deleteAt(i);
@@ -258,13 +329,14 @@ public class Mix {
 
                    	break;
 
+				// z
              	case "z":
 
     	            break;
 
                 // Error case
            	    default:
-               	    System.out.println("Invalid command: " + command);
+               	    System.out.println("ERROR - Invalid command: " + command);
                    	break;
                	}
 
