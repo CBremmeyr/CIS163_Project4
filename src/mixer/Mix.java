@@ -64,86 +64,115 @@ public class Mix {
 
         while(true) {
             
-            this.displayMessage();
-            System.out.print("Command: ");
-
-            // Save state
+            displayMessage();
+            
+			// Save state
             DoubleLinkedList<Character> currMessage =  new DoubleLinkedList<>();
             String currUndoCommands = undoCommands;
+   
+			// Get next full command
+            System.out.print("Command: ");
+			String input = scan.nextLine();
+			
+			// Parse command from input
+			char command = input.charAt(0);
 
-            try {
-               
-                String command = scan.next("[Qbrhdzpcx]");
+			// Flag to indecate an invalid input
+			boolean invalidInput = false;
 
-                switch (command) {
-                case "Q":
-                    
-                    save(scan.next());
+			if("Qbrcxphdz".indexOf(command) >= 0) {
+
+				// Parse and process command
+    	        switch (command) {
+
+				// Q [FILENAME]
+        	    case 'Q':
+
+					// Check that file name was given with command
+					String fileName = "";
+					if(input.length() > 1) {
+						fileName = input.substring(1).trim();
+					}
+					else {
+						System.out.println("Command Q requires a file name.");
+						break;
+					}
+
+                	save(fileName);
+					System.out.println("Saved to: " + fileName);
                     System.out.println ("Final mixed up message: \"" + message+"\"");
-                    System.exit(0); 
-                    break;
+	                System.exit(0); 
+    	            break;
 
-                case "b":
-                    insertbefore(scan.next(), scan.nextInt());
-                    break;
-
-                case "r":
-                    remove(scan.nextInt(), scan.nextInt());
-                    break;
-
-                case "c":
-                    copy(scan.nextInt(), scan.nextInt(), scan.nextInt());
-                    break;
-
-                case "x":
-                    cut(scan.nextInt(), scan.nextInt(), scan.nextInt());
-                    break;
-
-                case "p":
-                    paste(scan.nextInt(), scan.nextInt());
-                    break;
-
-                case "h":
-                    helpPage();
-                    break;
-
-                case "d":
-					String param = scan.next();
+				// b [STRING] [INDEX]
+       	        case 'b':
 					
+					// Parse command parameters
+					
+
+     	     	    insertbefore(scan.next(), scan.nextInt());
+                    break;
+
+	            case 'r':
+    	            remove(scan.nextInt(), scan.nextInt());
+       	            break;
+
+           	    case 'c':
+               	    copy(scan.nextInt(), scan.nextInt(), scan.nextInt());
+                   	break;
+
+                case 'x':
+    	            cut(scan.nextInt(), scan.nextInt(), scan.nextInt());
+        	        break;
+
+                case 'p':
+               	    paste(scan.nextInt(), scan.nextInt());
+                   	break;
+
+	            case 'h':
+   	                helpPage();
+       	            break;
+
+            	case 'd':
+					String param = scan.next();	
+	
 					// Invalid parameter for command
 					if(param.length() > 1) {
 						System.out.println("Command parameter '" + param +
-							 "' is too long to be valid, must be a char");
+								 "' is too long to be valid, must be a char");
 					}
+	
 					char toRemove = param.charAt(0);
-
+	
 					for(int i=0; i<message.size(); ++i) {
-						char temp = message.get(i);
+						char temp = message.get(i).toString().charAt(0);
+
 						if(temp == toRemove) {
+
 							message.deleteAt(i);
 							// TODO: record inverse command
 						}
 					}
 
-                    break;
+                   	break;
 
-                case "z":
+             	case 'z':
 
-                    break;
+    	            break;
 
                 // Error case
-                default:
-                    System.out.println("Invalid command: " + command);
-                    break;
-                }
+           	    default:
+               	    System.out.println("Invalid command: " + command);
+                   	break;
+               	}
 
 				// Add inverse commands to list of undo commands
-				addUndoCmd(command);
+				addUndoCmd(input);
 
                 scan.nextLine();   // should flush the buffer
                 System.out.println("For demonstration purposes only:\n" + undoCommands);
-            }
-            catch (Exception e ) {
+			}
+            else {
 
                 // Ignore and clear erroneous input by flushing buffer
                 System.out.println ("Error on input, previous state restored.");
@@ -156,9 +185,30 @@ public class Mix {
         }
     }
 
-    private void remove(int start, int stop) {
+	/**
+	 * Remove elements in list from 'start' to 'stop', inclusive.
+	 *
+	 * @param start - first index to remove.
+	 * @param stop - last index to remove.
+	 * @return String of removed elements.
+	 * @throws ArrayIndexOutOfBounds - if 'start' or 'stop' is outside 
+	 *                                 valid index range.
+	 */
+    private String remove(int start, int stop) throws ArrayIndexOutOfBoundsException {
 
-        
+		if(start < 0 || stop < 0 || 
+		   start >= message.size() ||  stop >= message.size()) {
+			throw new ArrayIndexOutOfBoundsException();
+		}
+
+		String removed = "";
+
+        for(int i=start; i <= stop; ++i) {
+			char temp = message.deleteAt(i);
+			removed = removed + temp;
+		}
+
+		return removed;
     }
 
     private void cut(int start, int stop, int clipNum) {
