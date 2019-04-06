@@ -80,13 +80,41 @@ public class Mix {
 			// Flag to indecate an invalid input
 			boolean invalidInput = false;
 
-			if("Qbrcxphdz".indexOf(command) >= 0) {
+			// Split input around whitespace
+			String[] parsedInput = input.split("\\s+");
+
+			// Trim off whitespace from parsed strings
+			for(int i=0; i < parsedInput.length; ++i) {
+				parsedInput[i].trim();
+			}
+
+			// Test if command is valid
+			boolean validCommand = true;
+			String commandList = "Qbrcxphdz";
+
+			// Check that command is correct length
+			if(parsedInput[0].length() != 1) {
+				validCommand = false;
+			}
+
+			// Check that the command argument is a valid command
+			if(!commandList.contains(parsedInput[0])) {
+				validCommand = false;
+			}
+
+			// Process command if it's valid
+			if(validCommand) {
+
+				int index1 = -1;
+				int index2 = -1;
+				int index3 = -1;
+				String intRegx = "-?\\d+";
 
 				// Parse and process command
-    	        switch (command) {
+    	        switch(parsedInput[0]) {
 
 				// Q [FILENAME]
-        	    case 'Q':
+        	    case "Q":
 
 					// Check that file name was given with command
 					String fileName = "";
@@ -105,35 +133,109 @@ public class Mix {
     	            break;
 
 				// b [STRING] [INDEX]
-       	        case 'b':
+       	        case "b":
 					
-					// Parse command parameters
-					
+					// Check that command pramaters are valid
+					if(parsedInput.length != 3) {
+						
+						// Too few arguments
+						System.out.println("Too few arguments for command.");
+						break;
+					}
+					else if(!parsedInput[2].matches(intRegx)) {
+						
+						// Index arg is not an int
+						System.out.println("Second agrument must be an integer");
+						break;
+					}
 
-     	     	    insertbefore(scan.next(), scan.nextInt());
+					// Convert index arg to int
+					index1 = Integer.parseInt(parsedInput[2]);
+
+					// Check if index is valid
+					if(message.validIndex(index1)) {
+						System.out.println("Index argument is out of range: " + index1);
+						break;
+					}
+
+					// Input is verrify so apply command
+					insertbefore(parsedInput[1], index1);
                     break;
 
-	            case 'r':
-    	            remove(scan.nextInt(), scan.nextInt());
+				// r [INDEX] [INDEX]
+	            case "r":
+
+					// Verify command arguments
+					if(!parsedInput[1].matches(intRegx) || !parsedInput[2].matches(intRegx)) {
+
+						// Argument(s) are not integers
+						System.out.println("Arguments must both be integers.");
+					}
+
+					// Convert index input to integers
+					index1 = Integer.parseInt(parsedInput[1]);
+					index2 = Integer.parseInt(parsedInput[2]);
+
+					// Check that indexes are vaild
+					if(!message.validIndex(index1) || !message.validIndex(index2)) {
+
+						// Index args are invalid
+						System.out.println("Index arguments are invalid.");
+					}
+
+					// Apply command
+					remove(index1, index2);
        	            break;
 
-           	    case 'c':
-               	    copy(scan.nextInt(), scan.nextInt(), scan.nextInt());
+				// c [CLIPBOARD_INDEX] [START_INDEX] [END_INDEX]
+           	    case "c":
+
+					// Verrify command arguments
+					if(parsedInput.length != 4) {
+						
+						// Incorrect amount of arguments
+						System.out.println("Incorrect number of command arguments.");
+						break;
+					}
+
+					// Check that all inputs are integers
+					if(!parsedInput[1].matches(intRegx) || !parsedInput[2].matches(intRegx) || 
+					   !parsedInput[3].matches(intRegx)) {
+						
+						// Not all inputs are integers
+						System.out.println("All arguments must be integers.");
+						break;
+					}
+					
+					// Convert arguments to integers
+					index1 = Integer.parseInt(parsedInput[1]);
+					index2 = Integer.parseInt(parsedInput[2]);
+					index3 = Integer.parseInt(parsedInput [3]);
+
+					// Check that message indexes are in valid range
+					if(!message.validIndex(index2) || !message.validIndex(index3)) {
+						System.out.println("Second and/or third argument is an invalid index.");
+					}
+
+					// TODO: check if clipboard index is correct
+
+					// Apply command
+					copy(index1, index2, index3);
                    	break;
 
-                case 'x':
+                case "x":
     	            cut(scan.nextInt(), scan.nextInt(), scan.nextInt());
         	        break;
 
-                case 'p':
+                case "p":
                	    paste(scan.nextInt(), scan.nextInt());
                    	break;
 
-	            case 'h':
+	            case "h":
    	                helpPage();
        	            break;
 
-            	case 'd':
+            	case "d":
 					String param = scan.next();	
 	
 					// Invalid parameter for command
@@ -156,7 +258,7 @@ public class Mix {
 
                    	break;
 
-             	case 'z':
+             	case "z":
 
     	            break;
 
@@ -174,13 +276,17 @@ public class Mix {
 			}
             else {
 
+				// Inform user of invalid command argument
+				System.out.println("Invalid command argument: " + parsedInput[0]);
+				System.out.println("See help page with command \"h\" for more information.");
+
                 // Ignore and clear erroneous input by flushing buffer
-                System.out.println ("Error on input, previous state restored.");
-                scan = new Scanner(System.in);
+//                System.out.println ("Error on input, previous state restored.");
+//                scan = new Scanner(System.in);
 
                 // Restore state
-                undoCommands = currUndoCommands;
-                message = currMessage;
+//                undoCommands = currUndoCommands;
+//                message = currMessage;
             }
         }
     }

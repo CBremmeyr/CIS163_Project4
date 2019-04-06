@@ -227,6 +227,17 @@ public class DoubleLinkedList<E>  {
         return -1;
     }
 
+
+	public boolean validIndex(int index) {
+		
+		// Test if index is valid
+		if(index >= 0 && index < size) {
+			return true;
+		}
+
+		return false;
+	}
+
 	
 	public int size() {
 		return size;
