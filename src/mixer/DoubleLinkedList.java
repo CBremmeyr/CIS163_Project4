@@ -24,28 +24,25 @@ public class DoubleLinkedList<E>  {
     /**
      * Get the data at node with proided index.
      *
-     * @param index location to get data from.
+     * @param index - location to get data from.
      * @return data at provided index, if index is out of bouds then
      *         returns null.
-	 * @throws ArryOutOfBoundsException - if index input is larger than
-	 *		   the size of the list.
+     * @throws ArryOutOfBoundsException - if index input is larger than
+     *         the size of the list.
      */
     public E get(int index) throws ArrayIndexOutOfBoundsException {
         
-		if(index >= size) {
-			throw new ArrayIndexOutOfBoundsException();
-		}
+        if(!validIndex(index)) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
 
         cursor = top;
         
-        if(index <= size) {
-            for (int i=0; i<index; ++i) {
-                cursor = cursor.getNext();
-            }
-            return cursor.getData();
+        for(int i = 0; i < index; ++i) {
+            cursor = cursor.getNext();
         }
-
-        return null;
+    
+        return cursor.getData();
     }
 
     /**
@@ -73,50 +70,49 @@ public class DoubleLinkedList<E>  {
      * @return the value that was removed.
      */
     public E deleteAt(int index) throws ArrayIndexOutOfBoundsException {
-       
-		if(index >= size) {
-			throw new ArrayIndexOutOfBoundsException();
-		}
 
-		NodeD<E> removed = null;
+        cursor = top;
 
-		// Set postion to start of list
-		if(top != null) {
-			cursor = top;
-		}
+        // Removing top
+        if(index == 0) {
 
-		// First node
-		if(index == 0) {
-			removed = top;
-			top = removed.getNext();
-			top.setPrev(null);
-			--size;
-			return removed.getData();
-		}
+            top = top.getNext();
+            top.setPrev(null);
 
-		// Go to node to remove
-		for(int i=0; i < index - 1; ++i) {
-			cursor = cursor.getNext();
-		}
-		
-		// Last node
-		if(cursor.getNext() == null) {
-			removed = cursor;
-			cursor = cursor.getPrev();
-			cursor.setNext(null);
-			--size;
-			return removed.getData();
-		}
+            --size;
+            return cursor.getData();
+        }
 
-		// Middle node
-		NodeD<E> newNext = cursor.getNext();
-		NodeD<E> newPrev = cursor.getPrev();
+        // Remvoing tail
+        else if(index == size - 1) {
+            
+            // Move cursor to end of the list
+            while(cursor.getNext() != null) {
+                cursor = cursor.getNext();
+            }
 
-		newPrev.setNext(newNext);
-		newNext.setPrev(newPrev);
+            // Remove node that cursor is on
+            cursor.getPrev().setNext(null);
+            --size;
+            return cursor.getData();
+        }
 
-		--size;
-		return cursor.getData();
+        // Removing middle
+        else {
+
+            // Move cursor to node that is being removed
+            for(int i=0; i < index; ++i) {
+                if(cursor.getNext() != null) {
+                    cursor = cursor.getNext();
+                }
+            }
+
+            // Delete node that cursor is on
+            cursor.getPrev().setNext(cursor.getNext());
+            cursor.getNext().setPrev(cursor.getPrev());
+            --size;
+            return cursor.getData();
+        }
     }
 
     /**
@@ -126,12 +122,12 @@ public class DoubleLinkedList<E>  {
      */
     public void add(E newData) {
        
-        NodeD<E> newNode = new NodeD<E>(newData, cursor, null);
+        NodeD<E> newNode = new NodeD<E>(newData);
         cursor = top;
 
         if(cursor == null) {
             top = newNode;
-			++size;
+            ++size;
             return;
         }
 
@@ -141,6 +137,7 @@ public class DoubleLinkedList<E>  {
         }
         
         cursor.setNext(newNode);
+        newNode.setPrev(cursor);
         ++this.size;
     }
 
@@ -227,19 +224,29 @@ public class DoubleLinkedList<E>  {
         return -1;
     }
 
+    /**
+     * Checks if index is valid for the current state of the list.
+     *
+     * @param index - index value to be checked.
+     * @return true if valid, false if invalid.
+     */
+    public boolean validIndex(int index) {
+        
+        // Test if index is valid
+        if(index >= 0 && index < size) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 
-	public boolean validIndex(int index) {
-		
-		// Test if index is valid
-		if(index >= 0 && index < size) {
-			return true;
-		}
-
-		return false;
-	}
-
-	
-	public int size() {
-		return size;
-	}
+    /**
+     * Get the current size of the list.
+     *
+     * @return the number of elements in the list.
+     */
+    public int size() {
+        return size;
+    }
 }

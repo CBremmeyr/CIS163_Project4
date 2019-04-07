@@ -12,7 +12,7 @@ public class Mix {
     /** Inverses of commands performed */
     private String undoCommands;
     
-    
+    /**  */
     private Hashtable<Integer, DoubleLinkedList<Character>> clipBoards;
 
     /** Initial message from CLI input */
@@ -137,7 +137,7 @@ public class Mix {
                     
                     // Check that command pramaters are valid
                     if(parsedInput.length != 3) {
-                        
+
                         // Too few arguments
                         System.out.println("Too few arguments for command.");
                         break;
@@ -150,10 +150,10 @@ public class Mix {
                     }
 
                     // Convert index arg to int
-                    index1 = Integer.parseInt(parsedInput[2]);
+                    index1 = Integer.parseInt(parsedInput[2]);                    
 
                     // Check if index is valid
-                    if(message.validIndex(index1)) {
+                    if(!message.validIndex(index1)) {
                         System.out.println("Index argument is out of range: " + index1);
                         break;
                     }
@@ -163,29 +163,57 @@ public class Mix {
                     break;
 
                 // r [INDEX] [INDEX]
+                // or
+                // r [CHAR1] [CHAR2]
                 case "r":
 
-                    // Verify command arguments
-                    if(!parsedInput[1].matches(intRegx) || !parsedInput[2].matches(intRegx)) {
+                    boolean removeFlag = false;
 
-                        // Argument(s) are not integers
-                        System.out.println("Arguments must both be integers.");
+                    // Check for correct number of arguments
+                    if(parsedInput.length != 3) {
+                        System.out.println("Incorrect number of arguments for command.");
                     }
 
-                    // Convert index input to integers
-                    index1 = Integer.parseInt(parsedInput[1]);
-                    index2 = Integer.parseInt(parsedInput[2]);
+                    // Check if arguments are both integers, then use remove command
+                    if(parsedInput[1].matches(intRegx) && parsedInput[2].matches(intRegx)) {
 
-                    // Check that indexes are vaild
-                    if(!message.validIndex(index1) || !message.validIndex(index2)) {
-
-                        // Index args are invalid
-                        System.out.println("Index arguments are invalid.");
+                        // Arguments are not integers
+                        removeFlag = true;
+                    }
+                    else {
+                        removeFlag = false;
                     }
 
-                    // Apply command
-                    remove(index1, index2);
-                    break;
+                    // Use remove command
+                    if(removeFlag) {
+
+                        // Convert index input to integers
+                        index1 = Integer.parseInt(parsedInput[1]);
+                        index2 = Integer.parseInt(parsedInput[2]);
+
+                        // Check that indexes are vaild
+                        if(!message.validIndex(index1) || !message.validIndex(index2)) {
+
+                            // Index args are invalid
+                            System.out.println("Index arguments are invalid.");
+                        }
+
+                        // Apply command
+                        remove(index1, index2);
+                        break;
+                    }
+
+                    // Use replace command
+                    else {
+
+                        // Check if arguments are both chars
+                        if(parsedInput[1].length() != 1 || parsedInput[2].length() != 1) {
+                            System.out.println("Arguments for replace command must be characters.");
+                        }
+
+                        replace(parsedInput[1].charAt(0), parsedInput[2].charAt(0));
+                        break;
+                    }
 
                 // c [CLIPBOARD_INDEX] [START_INDEX] [END_INDEX]
                 case "c":
@@ -316,17 +344,7 @@ public class Mix {
                     char toRemove = parsedInput[1].charAt(0);
 
                     // Delete all instances in the meesage
-                    for(int i=0; i<message.size(); ++i) {
-                        char temp = message.get(i).toString().charAt(0);
-
-                        // If the current char should be deleted
-                        if(temp == toRemove) {
-
-                            message.deleteAt(i);
-                            // TODO: record inverse command
-                        }
-                    }
-
+                    delete(toRemove);
                     break;
 
                 // z
@@ -340,11 +358,6 @@ public class Mix {
                     break;
                 }
 
-                // Add inverse commands to list of undo commands
-                addUndoCmd(input);
-
-                scan.nextLine();   // should flush the buffer
-                System.out.println("For demonstration purposes only:\n" + undoCommands);
             }
             else {
 
@@ -361,6 +374,37 @@ public class Mix {
 //                message = currMessage;
             }
         }
+    }
+
+    /**
+     * Delete all instances of a char in the message list.
+     *
+     * @param toRomve - char that is to be removed from the list.
+     */
+    public void delete(char toRemove) {
+
+        int i = 0;
+        while(message.validIndex(i)) {
+
+            char temp = message.get(i).toString().charAt(0);
+
+            // If the current char should be deleted
+            if(temp == toRemove) {
+
+                message.deleteAt(i);
+                --i;
+                // TODO: record inverse command
+            }
+
+            ++i;
+        }
+    }
+
+    /**
+     *
+     */
+    public void replace(char c1, char c2) {
+
     }
 
     /**
@@ -460,16 +504,6 @@ public class Mix {
 
         out.println(undoCommands);
         out.close();
-    }
-
-    /**
-     * Find inverse of provided command and add to list of undo commands.
-     *
-     * @param command - command to find inverse of and record.
-     */
-    private void addUndoCmd(String command) {
-
-        
     }
 
     /**
