@@ -394,6 +394,7 @@ public class Mix {
                 message.deleteAt(i);
                 --i;
                 // TODO: record inverse command
+                
             }
 
             ++i;
