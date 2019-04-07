@@ -35,13 +35,13 @@ public class Mix {
 
         Mix mix = new Mix();
 
-		// Try to get initial user message
+        // Try to get initial user message
         try {
             mix.userMessage = args[0];
         }
         catch(ArrayIndexOutOfBoundsException e) {
             
-			// Inform user of misusage problem and terminate
+            // Inform user of misusage problem and terminate
             System.out.println("Need starting message as command line argument.");
             System.exit(1);
         }
@@ -51,11 +51,11 @@ public class Mix {
            mix.message.add(mix.userMessage.charAt(i));
         }
 
-		// Show initial message
+        // Show initial message
         System.out.println("Message to mix: " + mix.userMessage);
         System.out.println();
 
-		// Start mixing command prompt
+        // Start mixing command prompt
         mix.mixture();
     }
 
@@ -66,291 +66,291 @@ public class Mix {
             
             displayMessage();
             
-			// Save state
+            // Save state
             DoubleLinkedList<Character> currMessage =  new DoubleLinkedList<>();
             String currUndoCommands = undoCommands;
    
-			// Get next full command
+            // Get next full command
             System.out.print("Command: ");
-			String input = scan.nextLine();
-			
-			// Parse command from input
-			char command = input.charAt(0);
+            String input = scan.nextLine();
+            
+            // Parse command from input
+            char command = input.charAt(0);
 
-			// Flag to indecate an invalid input
-			boolean invalidInput = false;
+            // Flag to indecate an invalid input
+            boolean invalidInput = false;
 
-			// Split input around whitespace
-			String[] parsedInput = input.split("\\s+");
+            // Split input around whitespace
+            String[] parsedInput = input.split("\\s+");
 
-			// Trim off whitespace from parsed strings
-			for(int i=0; i < parsedInput.length; ++i) {
-				parsedInput[i].trim();
-			}
+            // Trim off whitespace from parsed strings
+            for(int i=0; i < parsedInput.length; ++i) {
+                parsedInput[i].trim();
+            }
 
-			// Test if command is valid
-			boolean validCommand = true;
-			String commandList = "Qbrcxphdz";
+            // Test if command is valid
+            boolean validCommand = true;
+            String commandList = "Qbrcxphdz";
 
-			// Check that command is correct length
-			if(parsedInput[0].length() != 1) {
-				validCommand = false;
-			}
+            // Check that command is correct length
+            if(parsedInput[0].length() != 1) {
+                validCommand = false;
+            }
 
-			// Check that the command argument is a valid command
-			if(!commandList.contains(parsedInput[0])) {
-				validCommand = false;
-			}
+            // Check that the command argument is a valid command
+            if(!commandList.contains(parsedInput[0])) {
+                validCommand = false;
+            }
 
-			// Process command if it's valid
-			if(validCommand) {
+            // Process command if it's valid
+            if(validCommand) {
 
-				int index1 = -1;
-				int index2 = -1;
-				int index3 = -1;
-				String intRegx = "-?\\d+";
+                int index1 = -1;
+                int index2 = -1;
+                int index3 = -1;
+                String intRegx = "-?\\d+";
 
-				// Parse and process command
-    	        switch(parsedInput[0]) {
+                // Parse and process command
+                switch(parsedInput[0]) {
 
-				// Q [FILENAME]
-        	    case "Q":
+                // Q [FILENAME]
+                case "Q":
 
-					// Check that file name was given with command
-					String fileName = "";
-					if(input.length() > 1) {
-						fileName = input.substring(1).trim();
-					}
-					else {
-						System.out.println("Command Q requires a file name.");
-						break;
-					}
+                    // Check that file name was given with command
+                    String fileName = "";
+                    if(input.length() > 1) {
+                        fileName = input.substring(1).trim();
+                    }
+                    else {
+                        System.out.println("Command Q requires a file name.");
+                        break;
+                    }
 
-                	save(fileName);
-					System.out.println("Saved to: " + fileName);
+                    save(fileName);
+                    System.out.println("Saved to: " + fileName);
                     System.out.println ("Final mixed up message: \"" + message+"\"");
-	                System.exit(0); 
-    	            break;
-
-				// b [STRING] [INDEX]
-       	        case "b":
-					
-					// Check that command pramaters are valid
-					if(parsedInput.length != 3) {
-						
-						// Too few arguments
-						System.out.println("Too few arguments for command.");
-						break;
-					}
-					else if(!parsedInput[2].matches(intRegx)) {
-						
-						// Index arg is not an int
-						System.out.println("Second agrument must be an integer");
-						break;
-					}
-
-					// Convert index arg to int
-					index1 = Integer.parseInt(parsedInput[2]);
-
-					// Check if index is valid
-					if(message.validIndex(index1)) {
-						System.out.println("Index argument is out of range: " + index1);
-						break;
-					}
-
-					// Input is verrify so apply command
-					insertbefore(parsedInput[1], index1);
+                    System.exit(0); 
                     break;
 
-				// r [INDEX] [INDEX]
-	            case "r":
+                // b [STRING] [INDEX]
+                case "b":
+                    
+                    // Check that command pramaters are valid
+                    if(parsedInput.length != 3) {
+                        
+                        // Too few arguments
+                        System.out.println("Too few arguments for command.");
+                        break;
+                    }
+                    else if(!parsedInput[2].matches(intRegx)) {
+                        
+                        // Index arg is not an int
+                        System.out.println("Second agrument must be an integer");
+                        break;
+                    }
 
-					// Verify command arguments
-					if(!parsedInput[1].matches(intRegx) || !parsedInput[2].matches(intRegx)) {
+                    // Convert index arg to int
+                    index1 = Integer.parseInt(parsedInput[2]);
 
-						// Argument(s) are not integers
-						System.out.println("Arguments must both be integers.");
-					}
+                    // Check if index is valid
+                    if(message.validIndex(index1)) {
+                        System.out.println("Index argument is out of range: " + index1);
+                        break;
+                    }
 
-					// Convert index input to integers
-					index1 = Integer.parseInt(parsedInput[1]);
-					index2 = Integer.parseInt(parsedInput[2]);
+                    // Input is verrify so apply command
+                    insertbefore(parsedInput[1], index1);
+                    break;
 
-					// Check that indexes are vaild
-					if(!message.validIndex(index1) || !message.validIndex(index2)) {
+                // r [INDEX] [INDEX]
+                case "r":
 
-						// Index args are invalid
-						System.out.println("Index arguments are invalid.");
-					}
+                    // Verify command arguments
+                    if(!parsedInput[1].matches(intRegx) || !parsedInput[2].matches(intRegx)) {
 
-					// Apply command
-					remove(index1, index2);
-       	            break;
+                        // Argument(s) are not integers
+                        System.out.println("Arguments must both be integers.");
+                    }
 
-				// c [CLIPBOARD_INDEX] [START_INDEX] [END_INDEX]
-           	    case "c":
+                    // Convert index input to integers
+                    index1 = Integer.parseInt(parsedInput[1]);
+                    index2 = Integer.parseInt(parsedInput[2]);
 
-					// Verrify command arguments
-					if(parsedInput.length != 4) {
-						
-						// Incorrect amount of arguments
-						System.out.println("Incorrect number of command arguments.");
-						break;
-					}
+                    // Check that indexes are vaild
+                    if(!message.validIndex(index1) || !message.validIndex(index2)) {
 
-					// Check that all inputs are integers
-					if(!parsedInput[1].matches(intRegx) || !parsedInput[2].matches(intRegx) || 
-					   !parsedInput[3].matches(intRegx)) {
-						
-						// Not all inputs are integers
-						System.out.println("All arguments must be integers.");
-						break;
-					}
-					
-					// Convert arguments to integers
-					index1 = Integer.parseInt(parsedInput[1]);
-					index2 = Integer.parseInt(parsedInput[2]);
-					index3 = Integer.parseInt(parsedInput [3]);
+                        // Index args are invalid
+                        System.out.println("Index arguments are invalid.");
+                    }
 
-					// Check that message indexes are in valid range
-					if(!message.validIndex(index2) || !message.validIndex(index3)) {
-						System.out.println("Second and/or third argument is an invalid index.");
-					}
+                    // Apply command
+                    remove(index1, index2);
+                    break;
 
-					// TODO: check if clipboard index is correct
+                // c [CLIPBOARD_INDEX] [START_INDEX] [END_INDEX]
+                case "c":
 
-					// Apply command
-					copy(index1, index2, index3);
-                   	break;
+                    // Verrify command arguments
+                    if(parsedInput.length != 4) {
+                        
+                        // Incorrect amount of arguments
+                        System.out.println("Incorrect number of command arguments.");
+                        break;
+                    }
 
-				// x [CLIPBOARD_INDEX] [START_INDEX] [STOP_INDEX]
+                    // Check that all inputs are integers
+                    if(!parsedInput[1].matches(intRegx) || !parsedInput[2].matches(intRegx) || 
+                       !parsedInput[3].matches(intRegx)) {
+                        
+                        // Not all inputs are integers
+                        System.out.println("All arguments must be integers.");
+                        break;
+                    }
+                    
+                    // Convert arguments to integers
+                    index1 = Integer.parseInt(parsedInput[1]);
+                    index2 = Integer.parseInt(parsedInput[2]);
+                    index3 = Integer.parseInt(parsedInput [3]);
+
+                    // Check that message indexes are in valid range
+                    if(!message.validIndex(index2) || !message.validIndex(index3)) {
+                        System.out.println("Second and/or third argument is an invalid index.");
+                    }
+
+                    // TODO: check if clipboard index is correct
+
+                    // Apply command
+                    copy(index1, index2, index3);
+                    break;
+
+                // x [CLIPBOARD_INDEX] [START_INDEX] [STOP_INDEX]
                 case "x":
 
-					// Verrify that inputs are valid
-					if(parsedInput.length != 4) {
+                    // Verrify that inputs are valid
+                    if(parsedInput.length != 4) {
 
-						// Incorrect amount of arguments
-						System.out.println("Incorrect number of command arguments.");
-						break;
-					}
+                        // Incorrect amount of arguments
+                        System.out.println("Incorrect number of command arguments.");
+                        break;
+                    }
 
-					// Check that all inputs are integers
-					if(!parsedInput[1].matches(intRegx) || !parsedInput[2].matches(intRegx) || 
-					   !parsedInput[3].matches(intRegx)) {
-						
-						// Not all inputs are integers
-						System.out.println("All arguments must be integers.");
-						break;
-					}
+                    // Check that all inputs are integers
+                    if(!parsedInput[1].matches(intRegx) || !parsedInput[2].matches(intRegx) || 
+                       !parsedInput[3].matches(intRegx)) {
+                        
+                        // Not all inputs are integers
+                        System.out.println("All arguments must be integers.");
+                        break;
+                    }
 
-					// Convert arguments to integers
-					index1 = Integer.parseInt(parsedInput[1]);
-					index2 = Integer.parseInt(parsedInput[2]);
-					index3 = Integer.parseInt(parsedInput [3]);
+                    // Convert arguments to integers
+                    index1 = Integer.parseInt(parsedInput[1]);
+                    index2 = Integer.parseInt(parsedInput[2]);
+                    index3 = Integer.parseInt(parsedInput [3]);
 
-					// Check that message indexes are in valid range
-					if(!message.validIndex(index2) || !message.validIndex(index3)) {
-						System.out.println("Second and/or third argument is an invalid index for the message.");
-					}
+                    // Check that message indexes are in valid range
+                    if(!message.validIndex(index2) || !message.validIndex(index3)) {
+                        System.out.println("Second and/or third argument is an invalid index for the message.");
+                    }
 
-					// TODO: check if clipboard index is correct
+                    // TODO: check if clipboard index is correct
 
-					// Apply command
-					cut(index1, index2, index3);
-                   	break;
+                    // Apply command
+                    cut(index1, index2, index3);
+                    break;
 
-				// p [CLIPBOARD_INDEX] [START_INDEX]
+                // p [CLIPBOARD_INDEX] [START_INDEX]
                 case "p":
 
 
-					// Verrify that inputs are valid
-					if(parsedInput.length != 3) {
+                    // Verrify that inputs are valid
+                    if(parsedInput.length != 3) {
 
-						// Incorrect amount of arguments
-						System.out.println("Incorrect number of command arguments.");
-						break;
-					}
+                        // Incorrect amount of arguments
+                        System.out.println("Incorrect number of command arguments.");
+                        break;
+                    }
 
-					// Check that all inputs are integers
-					if(!parsedInput[1].matches(intRegx) || !parsedInput[2].matches(intRegx)) {
-						
-						// Not all inputs are integers
-						System.out.println("All arguments must be integers.");
-						break;
-					}
+                    // Check that all inputs are integers
+                    if(!parsedInput[1].matches(intRegx) || !parsedInput[2].matches(intRegx)) {
+                        
+                        // Not all inputs are integers
+                        System.out.println("All arguments must be integers.");
+                        break;
+                    }
 
-					// Convert arguments to integers
-					index1 = Integer.parseInt(parsedInput[1]);
-					index2 = Integer.parseInt(parsedInput[2]);
-					
-					// Check that message indexes are in valid range
-					if(!message.validIndex(index2)) {
-						System.out.println("Second argument is an invalid index for the message.");
-					}
+                    // Convert arguments to integers
+                    index1 = Integer.parseInt(parsedInput[1]);
+                    index2 = Integer.parseInt(parsedInput[2]);
+                    
+                    // Check that message indexes are in valid range
+                    if(!message.validIndex(index2)) {
+                        System.out.println("Second argument is an invalid index for the message.");
+                    }
 
-					// TODO: check if clipboard index is correct
+                    // TODO: check if clipboard index is correct
 
-					// Apply command
-					paste(index1, index2);
-                   	break;
+                    // Apply command
+                    paste(index1, index2);
+                    break;
 
-				// h
-	            case "h":
-   	                helpPage();
-       	            break;
+                // h
+                case "h":
+                    helpPage();
+                    break;
 
-				// d [CHAR]
-            	case "d":
+                // d [CHAR]
+                case "d":
 
-					// Verrify parameters for command
-					if(parsedInput.length != 2) {
-						System.out.println("Incorrect number of arguments for command");
-					}
+                    // Verrify parameters for command
+                    if(parsedInput.length != 2) {
+                        System.out.println("Incorrect number of arguments for command");
+                    }
 
-					// Check that argument is a single character
-					if(parsedInput[1].length() != 1) {
-						System.out.println("Argument must be a single character.");
-					}
+                    // Check that argument is a single character
+                    if(parsedInput[1].length() != 1) {
+                        System.out.println("Argument must be a single character.");
+                    }
 
-					// Get character that is being deleted from the message
-					char toRemove = parsedInput[1].charAt(0);
+                    // Get character that is being deleted from the message
+                    char toRemove = parsedInput[1].charAt(0);
 
-					// Delete all instances in the meesage
-					for(int i=0; i<message.size(); ++i) {
-						char temp = message.get(i).toString().charAt(0);
+                    // Delete all instances in the meesage
+                    for(int i=0; i<message.size(); ++i) {
+                        char temp = message.get(i).toString().charAt(0);
 
-						// If the current char should be deleted
-						if(temp == toRemove) {
+                        // If the current char should be deleted
+                        if(temp == toRemove) {
 
-							message.deleteAt(i);
-							// TODO: record inverse command
-						}
-					}
+                            message.deleteAt(i);
+                            // TODO: record inverse command
+                        }
+                    }
 
-                   	break;
+                    break;
 
-				// z
-             	case "z":
+                // z
+                case "z":
 
-    	            break;
+                    break;
 
                 // Error case
-           	    default:
-               	    System.out.println("ERROR - Invalid command: " + command);
-                   	break;
-               	}
+                default:
+                    System.out.println("ERROR - Invalid command: " + command);
+                    break;
+                }
 
-				// Add inverse commands to list of undo commands
-				addUndoCmd(input);
+                // Add inverse commands to list of undo commands
+                addUndoCmd(input);
 
                 scan.nextLine();   // should flush the buffer
                 System.out.println("For demonstration purposes only:\n" + undoCommands);
-			}
+            }
             else {
 
-				// Inform user of invalid command argument
-				System.out.println("Invalid command argument: " + parsedInput[0]);
-				System.out.println("See help page with command \"h\" for more information.");
+                // Inform user of invalid command argument
+                System.out.println("Invalid command argument: " + parsedInput[0]);
+                System.out.println("See help page with command \"h\" for more information.");
 
                 // Ignore and clear erroneous input by flushing buffer
 //                System.out.println ("Error on input, previous state restored.");
@@ -363,30 +363,30 @@ public class Mix {
         }
     }
 
-	/**
-	 * Remove elements in list from 'start' to 'stop', inclusive.
-	 *
-	 * @param start - first index to remove.
-	 * @param stop - last index to remove.
-	 * @return String of removed elements.
-	 * @throws ArrayIndexOutOfBounds - if 'start' or 'stop' is outside 
-	 *                                 valid index range.
-	 */
+    /**
+     * Remove elements in list from 'start' to 'stop', inclusive.
+     *
+     * @param start - first index to remove.
+     * @param stop - last index to remove.
+     * @return String of removed elements.
+     * @throws ArrayIndexOutOfBounds - if 'start' or 'stop' is outside 
+     *                                 valid index range.
+     */
     private String remove(int start, int stop) throws ArrayIndexOutOfBoundsException {
 
-		if(start < 0 || stop < 0 || 
-		   start >= message.size() ||  stop >= message.size()) {
-			throw new ArrayIndexOutOfBoundsException();
-		}
+        if(start < 0 || stop < 0 || 
+           start >= message.size() ||  stop >= message.size()) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
 
-		String removed = "";
+        String removed = "";
 
         for(int i=start; i <= stop; ++i) {
-			char temp = message.deleteAt(i);
-			removed = removed + temp;
-		}
+            char temp = message.deleteAt(i);
+            removed = removed + temp;
+        }
 
-		return removed;
+        return removed;
     }
 
     private void cut(int start, int stop, int clipNum) {
@@ -424,16 +424,16 @@ public class Mix {
     private void insertbefore(String token, int index) {
         
         for(int i=0; i <token.length(); ++i) {
-			
-			this.displayMessage();
+            
+            this.displayMessage();
 
             message.insertAt(index+i, token.charAt(i));
         }
     }
 
-	/**
-	 * Display message to CLI with index over each character.
-	 */
+    /**
+     * Display message to CLI with index over each character.
+     */
     private void displayMessage() {
         
         System.out.print ("Message:\n");
@@ -447,7 +447,7 @@ public class Mix {
         System.out.format ("\n");
     }
 
-	
+    
     public void save(String filename) {
 
         PrintWriter out = null;
@@ -462,15 +462,15 @@ public class Mix {
         out.close();
     }
 
-	/**
-	 * Find inverse of provided command and add to list of undo commands.
-	 *
-	 * @param command - command to find inverse of and record.
-	 */
-	private void addUndoCmd(String command) {
+    /**
+     * Find inverse of provided command and add to list of undo commands.
+     *
+     * @param command - command to find inverse of and record.
+     */
+    private void addUndoCmd(String command) {
 
-		
-	}
+        
+    }
 
     /**
      * Print the command help information to the console.

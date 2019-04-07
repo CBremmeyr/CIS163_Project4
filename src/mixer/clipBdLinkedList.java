@@ -19,7 +19,7 @@ public class clipBdLinkedList {
 
 	public boolean validIndex(int index) {
 
-		if(index >=0 && index < size) {
+		if(index >= 0 && index < size) {
 			return true;
 		}
 

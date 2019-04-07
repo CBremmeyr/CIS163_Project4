@@ -28,7 +28,7 @@ public class DoubleLinkedList<E>  {
      * @return data at provided index, if index is out of bouds then
      *         returns null.
 	 * @throws ArryOutOfBoundsException - if index input is larger than
-	 *   	   the size of the list.
+	 *		   the size of the list.
      */
     public E get(int index) throws ArrayIndexOutOfBoundsException {
         
