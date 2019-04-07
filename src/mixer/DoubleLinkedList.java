@@ -76,6 +76,13 @@ public class DoubleLinkedList<E>  {
         // Removing top
         if(index == 0) {
 
+            // If removing only node in list
+            if(size == 1) {
+                top = null;
+                size = 0;
+                return cursor.getData();
+            }
+
             top = top.getNext();
             top.setPrev(null);
 
