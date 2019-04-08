@@ -1,6 +1,5 @@
 package mixer;
 
-public class DoubleLinkedList<E>  {
   
     /** Referance to the top node of the list */ 
     protected NodeD<E> top;
@@ -41,7 +40,7 @@ public class DoubleLinkedList<E>  {
         for(int i = 0; i < index; ++i) {
             cursor = cursor.getNext();
         }
-    
+ 
         return cursor.getData();
     }
 
@@ -80,6 +79,7 @@ public class DoubleLinkedList<E>  {
             if(size == 1) {
                 top = null;
                 size = 0;
+                --size;
                 return cursor.getData();
             }
 
@@ -91,8 +91,8 @@ public class DoubleLinkedList<E>  {
         }
 
         // Remvoing tail
-        else if(index == size - 1) {
-            
+        else if(index == size-1) {
+ 
             // Move cursor to end of the list
             while(cursor.getNext() != null) {
                 cursor = cursor.getNext();
@@ -115,9 +115,16 @@ public class DoubleLinkedList<E>  {
             }
 
             // Delete node that cursor is on
-            cursor.getPrev().setNext(cursor.getNext());
-            cursor.getNext().setPrev(cursor.getPrev());
+            NodeD<E> newNext = cursor.getNext();
+            NodeD<E> newPrev = cursor.getPrev();
+
+            newPrev.setNext(newNext);
+            newNext.setPrev(newPrev);
+
+//            cursor.getPrev().setNext(cursor.getNext());
+//            cursor.getNext().setPrev(cursor.getPrev());
             --size;
+
             return cursor.getData();
         }
     }
@@ -145,7 +152,7 @@ public class DoubleLinkedList<E>  {
         
         cursor.setNext(newNode);
         newNode.setPrev(cursor);
-        ++this.size;
+        ++size;
     }
 
     /**
@@ -156,13 +163,12 @@ public class DoubleLinkedList<E>  {
      */
     public void insertAt(int index, E data) throws IndexOutOfBoundsException {
         
-        if(index >= size) {
+        if(!validIndex(index)) {
             throw new IndexOutOfBoundsException();
         }
     
         NodeD<E> newNode = new NodeD<E>(data);
         cursor = top;
-        ++size;
 
         // Instering at head of list 
         if(index == 0) {
@@ -178,6 +184,7 @@ public class DoubleLinkedList<E>  {
                 newNode.setPrev(null);
             }
 
+            ++size;
             return;
         }
 
@@ -194,8 +201,13 @@ public class DoubleLinkedList<E>  {
             cursor.setNext(newNode);
             newNode.setNext(null);
             newNode.setPrev(cursor);
+            ++size;
             return;
         }
+
+        System.out.println("-------\nindex: "+index);
+        System.out.println(cursor.getData());
+        System.out.println(cursor.getNext().getPrev().getData());
 
         // Insert inbetween two nodes
         NodeD<E> newNext = cursor.getNext();
@@ -203,7 +215,8 @@ public class DoubleLinkedList<E>  {
 
         cursor.setNext(newNode);
         newNode.setPrev(newPrev);
-        newNode.setNext(newNext);
+        newNode.setNext(newNext); 
+        ++size;
     }
 
     /**

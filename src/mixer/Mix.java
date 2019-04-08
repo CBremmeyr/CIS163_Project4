@@ -402,10 +402,26 @@ public class Mix {
     }
 
     /**
+     * Replace all instances of 'c1' with 'c2'.
      *
+     * @param c1 - character being removed and replaced.
+     * @param c2 - character being inserted.
      */
     public void replace(char c1, char c2) {
 
+        // Search for instances of 'c1'
+        for(int i=0; i < message.size()-1; ++i) {
+
+            // Check if match
+            if(message.get(i) == c1) {
+ 
+                // Replace data in node with new char
+                message.deleteAt(i);
+                message.insertAt(i, c2);
+
+                // TODO: record inverse command
+            }
+        }
     }
 
     /**
