@@ -1,7 +1,7 @@
 package mixer;
 
 import java.io.*;
-import java.util.Scanner;
+import java.util.*;
 
 public class UnMix {
     
@@ -11,6 +11,8 @@ public class UnMix {
 
     private Mix mixer;
 
+
+    private Stack<String> undoCmd;
     
 	public UnMix(String message) {
         this.message = new DoubleLinkedList<Character>();
@@ -75,6 +77,8 @@ public class UnMix {
             System.out.println("Unknown command: " + parsedCmd[0]);
         } 
 
+        System.out.println("cmd: "+command);
+
         return mixer.getMessage();
     }
 
@@ -90,13 +94,32 @@ public class UnMix {
         try {
             scanner = new Scanner(new File(filename));
         } catch (FileNotFoundException e) {
+            System.out.println("file not found: " +  filename);
             e.printStackTrace();
         }
 
-        while (scanner.hasNext()) {
-            String command = scanner.nextLine();
-            userMessage = processCommand(command);
-        } 
+
+        this.undoCmd = new Stack<String>();
+        
+        // Read commands into linked list
+        while(scanner.hasNextLine()) {
+            undoCmd.push(scanner.nextLine());
+        }
+
+        // Process commands
+        while(!undoCmd.empty()) {
+            if(!(undoCmd.peek().length() == 0)) {
+                processCommand(undoCmd.pop());
+            }
+            else {
+                undoCmd.pop();
+            }
+        }
+
+//        while (scanner.hasNext()) {
+//            String command = scanner.nextLine();
+//            userMessage = processCommand(command);
+//        } 
         return userMessage;
     }
 }

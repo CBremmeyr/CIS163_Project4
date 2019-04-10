@@ -388,7 +388,7 @@ public class Mix {
                 System.out.println("See help page with command \"h\" for more information.");
             }
 
-            System.out.println("undo cmdd: " + this.undoCommands);
+            System.out.println("undo cmd: " + this.undoCommands);
         }
     }
 
@@ -411,7 +411,8 @@ public class Mix {
                 --i;
                 
                 // Record inverse command
-                this.undoCommands += "b " + toRemove + " " + i + "\n";
+                int j = i + 1;
+                this.undoCommands += "b " + toRemove + " " + j + "\n";
             }
 
             ++i;
