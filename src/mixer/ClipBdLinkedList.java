@@ -4,16 +4,16 @@ package mixer;
  *
  * @param <T> linked list
  */
-public class clipBdLinkedList<T> {
+public class ClipBdLinkedList<T> {
 
-    private NodeCB top;
-    private NodeCB tail;
+    private NodeCB<T> top;
+    private NodeCB<T> tail;
     private int size;
 
     /**
      * Constructor for linked list
      */
-    public clipBdLinkedList() {
+    public ClipBdLinkedList() {
         tail = null;
         top = null;
         size = 0;
