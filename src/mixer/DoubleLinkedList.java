@@ -1,5 +1,6 @@
 package mixer;
 
+public class DoubleLinkedList<E> {
   
     /** Referance to the top node of the list */ 
     protected NodeD<E> top;
@@ -67,10 +68,15 @@ package mixer;
      *
      * @param index is the location of the node to delete.
      * @return the value that was removed.
+     * @throws ArrayIndexOutOfBoundsException if index to remove is not a valid index.
      */
     public E deleteAt(int index) throws ArrayIndexOutOfBoundsException {
 
-        cursor = top;
+        if(!validIndex(index)) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
+
+        NodeD<E> cursor = top;
 
         // Removing top
         if(index == 0) {
@@ -83,7 +89,7 @@ package mixer;
                 return cursor.getData();
             }
 
-            top = top.getNext();
+            top = cursor.getNext();
             top.setPrev(null);
 
             --size;
@@ -114,6 +120,8 @@ package mixer;
                 }
             }
 
+            System.out.println(cursor.getData());
+
             // Delete node that cursor is on
             NodeD<E> newNext = cursor.getNext();
             NodeD<E> newPrev = cursor.getPrev();
@@ -121,8 +129,6 @@ package mixer;
             newPrev.setNext(newNext);
             newNext.setPrev(newPrev);
 
-//            cursor.getPrev().setNext(cursor.getNext());
-//            cursor.getNext().setPrev(cursor.getPrev());
             --size;
 
             return cursor.getData();
@@ -163,60 +169,39 @@ package mixer;
      */
     public void insertAt(int index, E data) throws IndexOutOfBoundsException {
         
-        if(!validIndex(index)) {
+        if(!validIndex(index) && index != size) {
             throw new IndexOutOfBoundsException();
         }
-    
+ 
         NodeD<E> newNode = new NodeD<E>(data);
-        cursor = top;
+        NodeD<E> cursor = top;
 
-        // Instering at head of list 
         if(index == 0) {
-            
             top = newNode;
-
-            if(cursor != null) {
-                newNode.setNext(cursor);
-                cursor.setPrev(newNode);
-            }
-            else {
-                newNode.setNext(null);
-                newNode.setPrev(null);
-            }
-
+            newNode.setPrev(null);
+            newNode.setNext(cursor);
+            cursor.setPrev(newNode);
             ++size;
             return;
         }
-
-        // Move to node previous to insertion point
-        for(int i=0; i < index-1; ++i) {
-            if(cursor.getNext() != null) {
+        if(index == size) { 
+            add(data);
+        }
+        else {
+            cursor = top;
+            for(int i=0; i<index-1; ++i) {
                 cursor = cursor.getNext();
             }
-        }
 
-        // If inserting at end of the list
-        if(cursor.getNext() == null) {
-            
+            NodeD<E> oldNext = cursor.getNext();
+            NodeD<E> oldPrev = cursor;
             cursor.setNext(newNode);
-            newNode.setNext(null);
-            newNode.setPrev(cursor);
+            newNode.setNext(oldNext);
+            oldNext.setPrev(newNode);
+            newNode.setPrev(oldPrev);
             ++size;
             return;
         }
-
-        System.out.println("-------\nindex: "+index);
-        System.out.println(cursor.getData());
-        System.out.println(cursor.getNext().getPrev().getData());
-
-        // Insert inbetween two nodes
-        NodeD<E> newNext = cursor.getNext();
-        NodeD<E> newPrev = cursor;
-
-        cursor.setNext(newNode);
-        newNode.setPrev(newPrev);
-        newNode.setNext(newNext); 
-        ++size;
     }
 
     /**
@@ -259,6 +244,26 @@ package mixer;
         else {
             return false;
         }
+    }
+
+    public String toStringB() {
+        
+        String temp = "";
+        cursor = top;
+        while(cursor.getNext() != null) {
+            cursor = cursor.getNext();
+        }
+
+        while(cursor != null) {
+            temp += cursor.getData();
+
+
+//            System.out.println(temp);
+
+
+            cursor = cursor.getPrev();
+        }
+        return temp;
     }
 
     /**

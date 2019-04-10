@@ -410,7 +410,7 @@ public class Mix {
     public void replace(char c1, char c2) {
 
         // Search for instances of 'c1'
-        for(int i=0; i < message.size()-1; ++i) {
+        for(int i=0; i < message.size(); ++i) {
 
             // Check if match
             if(message.get(i) == c1) {
@@ -422,6 +422,9 @@ public class Mix {
                 // TODO: record inverse command
             }
         }
+
+        System.out.println(message); 
+        System.out.println(message.toStringB());
     }
 
     /**
@@ -485,9 +488,6 @@ public class Mix {
     private void insertbefore(String token, int index) {
         
         for(int i=0; i <token.length(); ++i) {
-            
-            this.displayMessage();
-
             message.insertAt(index+i, token.charAt(i));
         }
     }
