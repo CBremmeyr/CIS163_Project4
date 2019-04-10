@@ -153,8 +153,8 @@ public class Mix {
                     index1 = Integer.parseInt(parsedInput[2]);                    
 
                     // Check if index is valid
-                    if(!message.validIndex(index1)) {
-                        System.out.println("Index argument is out of range: " + index1);
+                    if(!message.validIndex(index1) && index1 != message.size()) {
+                        System.out.println("Index argument is out of range.");
                         break;
                     }
 
@@ -172,6 +172,7 @@ public class Mix {
                     // Check for correct number of arguments
                     if(parsedInput.length != 3) {
                         System.out.println("Incorrect number of arguments for command.");
+                        break;
                     }
 
                     // Check if arguments are both integers, then use remove command
@@ -196,6 +197,12 @@ public class Mix {
 
                             // Index args are invalid
                             System.out.println("Index arguments are invalid.");
+                            break;
+                        }
+
+                        if(index1 > index2) {
+                            System.out.println("First index must be smaller than or equal to second index.");
+                            break;
                         }
 
                         // Apply command
@@ -209,6 +216,7 @@ public class Mix {
                         // Check if arguments are both chars
                         if(parsedInput[1].length() != 1 || parsedInput[2].length() != 1) {
                             System.out.println("Arguments for replace command must be characters.");
+                            break;
                         }
 
                         replace(parsedInput[1].charAt(0), parsedInput[2].charAt(0));
@@ -422,9 +430,6 @@ public class Mix {
                 // TODO: record inverse command
             }
         }
-
-        System.out.println(message); 
-        System.out.println(message.toStringB());
     }
 
     /**
@@ -445,7 +450,7 @@ public class Mix {
 
         String removed = "";
 
-        for(int i=start; i <= stop; ++i) {
+        for(int i=stop; i >= start; --i) {
             char temp = message.deleteAt(i);
             removed = removed + temp;
         }

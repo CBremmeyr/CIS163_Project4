@@ -120,8 +120,6 @@ public class DoubleLinkedList<E> {
                 }
             }
 
-            System.out.println(cursor.getData());
-
             // Delete node that cursor is on
             NodeD<E> newNext = cursor.getNext();
             NodeD<E> newPrev = cursor.getPrev();
