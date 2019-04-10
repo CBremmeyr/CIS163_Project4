@@ -9,7 +9,7 @@ public class Mix {
     /** Double linked list to hold users message in its current state */
     private DoubleLinkedList<Character> message;
     
-    /** Inverses of commands performed */
+    /** Inverses of commands performed to unmix message */
     private String undoCommands;
     
     /**  */
@@ -381,6 +381,8 @@ public class Mix {
 //                undoCommands = currUndoCommands;
 //                message = currMessage;
             }
+
+            System.out.println("undo cmdd: " + this.undoCommands);
         }
     }
 
@@ -492,9 +494,14 @@ public class Mix {
      */
     private void insertbefore(String token, int index) {
         
-        for(int i=0; i <token.length(); ++i) {
+        int stop = token.length() + index - 1;
+
+        for(int i=0; i < token.length(); ++i) {
             message.insertAt(index+i, token.charAt(i));
         }
+
+        // Generate and store inverse commands
+        this.undoCommands += "r " + index + " " + stop + "\n";
     }
 
     /**
@@ -513,7 +520,11 @@ public class Mix {
         System.out.format ("\n");
     }
 
-    
+    /**
+     * Save commands to unmix message to file.
+     *
+     * @param filename - name of file to save key to.
+     */
     public void save(String filename) {
 
         PrintWriter out = null;
