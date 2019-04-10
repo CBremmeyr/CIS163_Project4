@@ -438,7 +438,7 @@ public class Mix {
                 message.insertAt(i, c2);
             }
         }
- 
+
         // Record inverse command
         this.undoCommands += "r " + c2 + " " + c1 + "\n";
     }
@@ -501,7 +501,7 @@ public class Mix {
      * @param index - Location to be inserted before.
      */
     protected void insertbefore(String token, int index) {
-        
+
         int stop = token.length() + index - 1;
 
         for(int i=0; i < token.length(); ++i) {
@@ -515,12 +515,12 @@ public class Mix {
     /**
      * Display message to CLI with index over each character.
      */
-    private void displayMessage() {
+    protected void displayMessage() {
         
         System.out.print ("Message:\n");
         userMessage = message.toString();
 
-        for (int i = 0; i < userMessage.length(); i++) 
+        for(int i = 0; i < userMessage.length(); i++) 
             System.out.format ("%3d", i);
         System.out.format ("\n");
         for (char c : userMessage.toCharArray()) 

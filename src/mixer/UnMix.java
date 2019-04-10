@@ -38,6 +38,9 @@ public class UnMix {
             if(parsedCmd.length > 3) {
                 toInsert = command.substring(2, command.length() - parsedCmd[parsedCmd.length-1].length() - 1);
             }
+            else {
+                toInsert = parsedCmd[1];
+            }
 
             mixer.insertbefore(toInsert, index);
             break;
@@ -64,7 +67,7 @@ public class UnMix {
             else {
 
                 // Use replace command
-                mixer.replace(parsedCmd[1].charAt(0), parsedCmd[2].charAt(0));
+                mixer.replace(parsedCmd[1].charAt(0), parsedCmd[2].charAt(0)); 
             }
 
             break;
@@ -84,12 +87,12 @@ public class UnMix {
 
     
 	private void unMixture(String filename, String userMessage) {
-        String original = UnMixUsingFile (filename, userMessage);
-        System.out.println ("The Original message was: " + original);
+        UnMixUsingFile (filename, userMessage);
+        System.out.println ("The Original message was: " + mixer.getMessage());
     }
 
 	
-    public String UnMixUsingFile(String filename, String userMessage) {
+    public void UnMixUsingFile(String filename, String userMessage) {
         Scanner scanner = null;
         try {
             scanner = new Scanner(new File(filename));
@@ -115,11 +118,5 @@ public class UnMix {
                 undoCmd.pop();
             }
         }
-
-//        while (scanner.hasNext()) {
-//            String command = scanner.nextLine();
-//            userMessage = processCommand(command);
-//        } 
-        return userMessage;
     }
 }
