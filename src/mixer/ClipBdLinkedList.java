@@ -2,7 +2,7 @@ package mixer;
 
 /**
  *
- * @param <T> linked list
+ * @param <T> linked list data type
  */
 public class ClipBdLinkedList<T> {
 
@@ -21,6 +21,7 @@ public class ClipBdLinkedList<T> {
 
     /**
      * returns the length of the linked list
+     *
      * @return length of list
      */
     public int getLen() {
@@ -61,7 +62,8 @@ public class ClipBdLinkedList<T> {
         size++;
         setTail();
     }
-/**
+
+    /**
      * Inserts data after index provided
      * @param index area to insert after
      * @param data data to be inserted
@@ -112,6 +114,7 @@ public class ClipBdLinkedList<T> {
 
         this.tail = temp;
     }
+
     /**
      * deletes the object at the index provided
      * @param index index of where to delete from
