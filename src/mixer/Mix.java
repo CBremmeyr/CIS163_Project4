@@ -30,6 +30,20 @@ public class Mix {
         undoCommands = "";
     }
 
+
+    public Mix(String message) {
+        scan = new Scanner(System.in);
+        this.message = new DoubleLinkedList<Character>();
+        clipBoards = new Hashtable<Integer, DoubleLinkedList<Character>>();
+
+
+        for(int i=0; i<message.length(); ++i) {
+            this.message.add(message.charAt(i));
+        }
+
+        undoCommands = "";
+    }
+
     
     public static void main(String[] args) {
 
@@ -372,14 +386,6 @@ public class Mix {
                 // Inform user of invalid command argument
                 System.out.println("Invalid command argument: " + parsedInput[0]);
                 System.out.println("See help page with command \"h\" for more information.");
-
-                // Ignore and clear erroneous input by flushing buffer
-//                System.out.println ("Error on input, previous state restored.");
-//                scan = new Scanner(System.in);
-
-                // Restore state
-//                undoCommands = currUndoCommands;
-//                message = currMessage;
             }
 
             System.out.println("undo cmdd: " + this.undoCommands);
@@ -403,8 +409,9 @@ public class Mix {
 
                 message.deleteAt(i);
                 --i;
-                // TODO: record inverse command
                 
+                // Record inverse command
+                this.undoCommands += "b " + toRemove + " " + i + "\n";
             }
 
             ++i;
@@ -417,7 +424,7 @@ public class Mix {
      * @param c1 - character being removed and replaced.
      * @param c2 - character being inserted.
      */
-    public void replace(char c1, char c2) {
+    protected void replace(char c1, char c2) {
 
         // Search for instances of 'c1'
         for(int i=0; i < message.size(); ++i) {
@@ -428,10 +435,11 @@ public class Mix {
                 // Replace data in node with new char
                 message.deleteAt(i);
                 message.insertAt(i, c2);
-
-                // TODO: record inverse command
             }
         }
+ 
+        // Record inverse command
+        this.undoCommands += "r " + c2 + " " + c1 + "\n";
     }
 
     /**
@@ -439,11 +447,10 @@ public class Mix {
      *
      * @param start - first index to remove.
      * @param stop - last index to remove.
-     * @return String of removed elements.
      * @throws ArrayIndexOutOfBounds - if 'start' or 'stop' is outside 
      *                                 valid index range.
      */
-    private String remove(int start, int stop) throws ArrayIndexOutOfBoundsException {
+    protected void remove(int start, int stop) throws ArrayIndexOutOfBoundsException {
 
         if(start < 0 || stop < 0 || 
            start >= message.size() ||  stop >= message.size()) {
@@ -454,10 +461,10 @@ public class Mix {
 
         for(int i=stop; i >= start; --i) {
             char temp = message.deleteAt(i);
-            removed = removed + temp;
+            removed = temp + removed;
         }
 
-        return removed;
+        this.undoCommands += "b " + removed + " " + start + "\n";
     }
 
     private void cut(int start, int stop, int clipNum) {
@@ -492,7 +499,7 @@ public class Mix {
      * @param token - String to be inserted.
      * @param index - Location to be inserted before.
      */
-    private void insertbefore(String token, int index) {
+    protected void insertbefore(String token, int index) {
         
         int stop = token.length() + index - 1;
 
@@ -520,6 +527,21 @@ public class Mix {
         System.out.format ("\n");
     }
 
+
+    public String getMessage() {
+        String temp = "";
+        for(int i=0; i<message.size(); ++i) {
+            try {
+                temp += message.get(i);
+            }
+            catch(ArrayIndexOutOfBoundsException e) {
+                break;
+            }
+        }
+
+        return temp;
+    }
+
     /**
      * Save commands to unmix message to file.
      *
@@ -542,7 +564,7 @@ public class Mix {
     /**
      * Print the command help information to the console.
      */
-    private void helpPage() {
+    protected void helpPage() {
         
         System.out.println("Commands:");
         System.out.println("\tQ [filename]\t\t\tquit and save to filename");         

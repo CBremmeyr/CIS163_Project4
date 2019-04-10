@@ -8,37 +8,74 @@ public class UnMix {
 	
 	private DoubleLinkedList<Character> message;
 
+
+    private Mix mixer;
+
     
-	public UnMix() {
-        message = new DoubleLinkedList<Character>();
+	public UnMix(String message) {
+        this.message = new DoubleLinkedList<Character>();
+        mixer = new Mix(message);
     }
 
     
 	public static void main(String[] args) {
-        UnMix v = new UnMix();
+        UnMix v = new UnMix(args[1]);
         v.unMixture(args[0], args[1]);
     }
 
     
 	public String processCommand(String command) {
-        Scanner scan = new Scanner(command);
-        char charInput;
+        
+        String[] parsedCmd = command.split("\\s+");
 
-        try {
-            command = scan.next();
-            switch (command.charAt(0)) {
+        switch(parsedCmd[0]) {
+        case "b":
+            int index = Integer.parseInt(parsedCmd[parsedCmd.length-1]);
+            String toInsert = "";
 
-            // put undo commands here
+            if(parsedCmd.length > 3) {
+                toInsert = command.substring(2, command.length() - parsedCmd[parsedCmd.length-1].length() - 1);
             }
-        } catch (Exception e) {
-            System.out.println("Error in command!  Problem!!!! in undo commands");
-            System.exit(0);
-        }
-        finally {
-            scan.close();
-        }
 
-        return message.toString();
+            mixer.insertbefore(toInsert, index);
+            break;
+
+        case "r":
+            
+            // Check if replace or remove command shoule be used
+            boolean removeFlag;
+            String intRegx = "-?\\d+";
+            if(parsedCmd[1].matches(intRegx) && parsedCmd[2].matches(intRegx)) {
+
+                // Arguments are not integers
+                removeFlag = true;
+            }
+            else {
+                removeFlag = false;
+            }
+
+            if(removeFlag) {
+
+                // Use remove command
+                mixer.remove(Integer.parseInt(parsedCmd[1]), Integer.parseInt(parsedCmd[2]));
+            }
+            else {
+
+                // Use replace command
+                mixer.replace(parsedCmd[1].charAt(0), parsedCmd[2].charAt(0));
+            }
+
+            break;
+
+        case "d":
+            // TODO: process delete command
+            break;
+
+        default:
+            System.out.println("Unknown command: " + parsedCmd[0]);
+        } 
+
+        return mixer.getMessage();
     }
 
     
