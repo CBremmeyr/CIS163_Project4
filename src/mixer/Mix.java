@@ -9,14 +9,10 @@ public class Mix {
     /** Double linked list to hold users message in its current state */
     private DoubleLinkedList<Character> message;
 
-
-    
     /** Inverses of commands performed to unmix message */
     private String undoCommands;
 
-    private ClipBdLinkedList<Character> clipBoard;
-    
-    /**  */
+    /** Hashtable to hold multipule clipboard messages */
     private Hashtable<Integer, ClipBdLinkedList<Character>> clipBoards;
 
     /** Initial message from CLI input */
@@ -25,18 +21,21 @@ public class Mix {
     /** Scaneer for user input through CLI */
     private Scanner scan;
 
-    
+    /**
+     * Allocate memory for instance variables.
+     */
     public Mix() {
         scan = new Scanner(System.in);
         message = new DoubleLinkedList<Character>();
         clipBoards = new Hashtable<Integer, ClipBdLinkedList<Character>>();
-        //clipBoard = new  ClipBdLinkedList<Character>;
-
-
         undoCommands = "";
     }
 
-
+    /**
+     * Set initial message value to the passed in string.
+     *
+     * @param message - initial message to be set.
+     */
     public Mix(String message) {
         scan = new Scanner(System.in);
         this.message = new DoubleLinkedList<Character>();
@@ -50,7 +49,11 @@ public class Mix {
         undoCommands = "";
     }
 
-    
+    /**
+     * Allow user to mix message with commands
+     *
+     * @param 1 - String for the message to mix.
+     */
     public static void main(String[] args) {
 
         Mix mix = new Mix();
@@ -79,7 +82,9 @@ public class Mix {
         mix.mixture();
     }
 
-
+    /**
+     * Allow user to enter commands then process commands to mix the message.
+     */
     private void mixture() {
 
         while(true) {

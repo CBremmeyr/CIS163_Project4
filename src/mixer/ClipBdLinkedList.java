@@ -5,12 +5,16 @@ package mixer;
  * @param <T> data being stored in single linked list
  */
 public class ClipBdLinkedList<T> {
+
     /** Top node in single linked list*/
     private NodeCB<T> top;
+
     /** Botton node in single linked list*/
     private NodeCB<T> tail;
+
     /** size of linked list*/
     private int size;
+
     /**clip board key for where it should be stored in hash*/
     private int clipNum;
 
