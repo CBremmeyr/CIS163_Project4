@@ -1,5 +1,9 @@
 package mixer;
 
+/**
+ * Single linked list for clip board data to be stored in
+ * @param <T> data being stored in clipboard linked list
+ */
 public class NodeCB<T> {
 
     /** Refrence to next node in list */

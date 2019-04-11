@@ -1,10 +1,17 @@
 package mixer;
 
+/**
+ * single linked list for storing clip boards
+ * @param <T> data being stored in single linked list
+ */
 public class ClipBdLinkedList<T> {
-
+    /** Top node in single linked list*/
     private NodeCB<T> top;
+    /** Botton node in single linked list*/
     private NodeCB<T> tail;
+    /** size of linked list*/
     private int size;
+    /**clip board key for where it should be stored in hash*/
     private int clipNum;
 
     /**
@@ -18,7 +25,6 @@ public class ClipBdLinkedList<T> {
 
     /**
      * returns the length of the linked list
-     *
      * @return length of list
      */
     public int getLen() {
@@ -27,7 +33,6 @@ public class ClipBdLinkedList<T> {
 
     /**
      * Inserts data before the index provided
-     * @param index area of where text should be placed
      * @param data data to be inserted
      */
     public void insertBefore( T data) {
@@ -166,17 +171,14 @@ public class ClipBdLinkedList<T> {
     @Override
     public String toString() {
 
-        // Show the linked list forward
+        // Show the linked list
         String string = "";
         NodeCB<T> currentNode = this.top;
         while (currentNode != null) {
             string += currentNode.getData();
             currentNode = currentNode.getNext();
         }
-
-
         // Return the String representation that shows the linked list
-        // both forward
         return string;
     }
 }

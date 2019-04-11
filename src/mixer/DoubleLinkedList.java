@@ -1,5 +1,9 @@
 package mixer;
 
+/**
+ * double linked list to store nodes with data
+ * @param <E> data being stored in the double linked list
+ */
 public class DoubleLinkedList<E> {
   
     /** Referance to the top node of the list */ 
@@ -27,7 +31,7 @@ public class DoubleLinkedList<E> {
      * @param index - location to get data from.
      * @return data at provided index, if index is out of bouds then
      *         returns null.
-     * @throws ArryOutOfBoundsException - if index input is larger than
+     * @throws ArrayOutOfBoundsException - if index input is larger than
      *         the size of the list.
      */
     public E get(int index) throws ArrayIndexOutOfBoundsException {
