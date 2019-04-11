@@ -21,6 +21,12 @@ public class UnMix {
 
     
 	public static void main(String[] args) {
+
+	    if(args.length != 2){
+	        System.out.println("Not enough arguments.");
+	        System.exit(0);
+        }
+
         UnMix v = new UnMix(args[1]);
         v.unMixture(args[0], args[1]);
     }
@@ -73,8 +79,8 @@ public class UnMix {
             break;
 
         case "d":
-            // TODO: process delete command
-            
+            // Process delete command
+            mixer.insertbefore(parsedCmd[1], Integer.parseInt(parsedCmd[0]));
             break;
 
         default:
@@ -99,7 +105,8 @@ public class UnMix {
             scanner = new Scanner(new File(filename));
         } catch (FileNotFoundException e) {
             System.out.println("file not found: " +  filename);
-            e.printStackTrace();
+            System.exit(1);
+//            e.printStackTrace();
         }
 
 

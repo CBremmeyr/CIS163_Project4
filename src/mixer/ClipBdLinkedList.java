@@ -1,14 +1,11 @@
 package mixer;
 
-/**
- *
- * @param <T> linked list data type
- */
 public class ClipBdLinkedList<T> {
 
     private NodeCB<T> top;
     private NodeCB<T> tail;
     private int size;
+    private int clipNum;
 
     /**
      * Constructor for linked list
@@ -33,7 +30,7 @@ public class ClipBdLinkedList<T> {
      * @param index area of where text should be placed
      * @param data data to be inserted
      */
-    public void insertBefore(int index, T data) {
+    public void insertBefore( T data) {
 
         NodeCB<T> temp;
         NodeCB<T> newNode = new NodeCB<>();
@@ -42,7 +39,7 @@ public class ClipBdLinkedList<T> {
         if (size == 0) {
             top = newNode;
         }
-        if(size == 1 && index <= 1){
+        if(size == 1 && getLen() <= 1){
             newNode.setNext(top);
             top = newNode;
         }
@@ -50,7 +47,7 @@ public class ClipBdLinkedList<T> {
         else {
 
             temp = top;
-            for (int i = 0; i < index-1; i++) {
+            for (int i = 0; i < getLen()-1; i++) {
                 temp = temp.getNext();
             }
 
@@ -170,10 +167,10 @@ public class ClipBdLinkedList<T> {
     public String toString() {
 
         // Show the linked list forward
-        String string = "Forward: ";
+        String string = "";
         NodeCB<T> currentNode = this.top;
         while (currentNode != null) {
-            string += currentNode.toString()  + " ";
+            string += currentNode.getData();
             currentNode = currentNode.getNext();
         }
 

@@ -8,12 +8,16 @@ public class Mix {
 
     /** Double linked list to hold users message in its current state */
     private DoubleLinkedList<Character> message;
+
+
     
     /** Inverses of commands performed to unmix message */
     private String undoCommands;
+
+    private ClipBdLinkedList<Character> clipBoard;
     
     /**  */
-    private Hashtable<Integer, DoubleLinkedList<Character>> clipBoards;
+    private Hashtable<Integer, ClipBdLinkedList<Character>> clipBoards;
 
     /** Initial message from CLI input */
     private String userMessage;
@@ -25,7 +29,9 @@ public class Mix {
     public Mix() {
         scan = new Scanner(System.in);
         message = new DoubleLinkedList<Character>();
-        clipBoards = new Hashtable<Integer, DoubleLinkedList<Character>>();
+        clipBoards = new Hashtable<Integer, ClipBdLinkedList<Character>>();
+        //clipBoard = new  ClipBdLinkedList<Character>;
+
 
         undoCommands = "";
     }
@@ -34,7 +40,7 @@ public class Mix {
     public Mix(String message) {
         scan = new Scanner(System.in);
         this.message = new DoubleLinkedList<Character>();
-        clipBoards = new Hashtable<Integer, DoubleLinkedList<Character>>();
+        clipBoards = new Hashtable<Integer, ClipBdLinkedList<Character>>();
 
 
         for(int i=0; i<message.length(); ++i) {
@@ -263,11 +269,10 @@ public class Mix {
                     index3 = Integer.parseInt(parsedInput [3]);
 
                     // Check that message indexes are in valid range
-                    if(!message.validIndex(index2) || !message.validIndex(index3)) {
+                    if((!message.validIndex(index2)) || (!message.validIndex(index3))) {
                         System.out.println("Second and/or third argument is an invalid index.");
+                        break;
                     }
-
-                    // TODO: check if clipboard index is correct
 
                     // Apply command
                     copy(index1, index2, index3);
@@ -301,9 +306,8 @@ public class Mix {
                     // Check that message indexes are in valid range
                     if(!message.validIndex(index2) || !message.validIndex(index3)) {
                         System.out.println("Second and/or third argument is an invalid index for the message.");
+                        break;
                     }
-
-                    // TODO: check if clipboard index is correct
 
                     // Apply command
                     cut(index1, index2, index3);
@@ -338,7 +342,11 @@ public class Mix {
                         System.out.println("Second argument is an invalid index for the message.");
                     }
 
-                    // TODO: check if clipboard index is correct
+                    // Check if clipboard index is correct
+                    if(!clipBoards.containsKey(index2)) {
+                        System.out.println("Invalid clipboard index.");
+                        break;
+                    }
 
                     // Apply command
                     paste(index1, index2);
@@ -469,7 +477,25 @@ public class Mix {
     }
 
     private void cut(int start, int stop, int clipNum) {
+        if(start < 0 || stop < 0 ||
+                start >= message.size() ||  stop >= message.size()) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
 
+        String temp = "";
+        for(int i=start; i <= stop; ++i) {
+            temp += message.get(i);
+        }
+
+        ClipBdLinkedList<Character> clipMess = new ClipBdLinkedList<Character>();
+
+        for(int i=0; i<temp.length(); ++i) {
+            clipMess.insertAfter(clipMess.getLen()-1, temp.charAt(i));
+        }
+
+        clipBoards.put(clipNum, clipMess);
+
+        remove(start, stop);
     }
 
     /**
@@ -480,7 +506,23 @@ public class Mix {
      * @param clipNum - clipboard index to copy values to.
      */
     private void copy(int start, int stop, int clipNum) {
+        if(start < 0 || stop < 0 ||
+                start >= message.size() ||  stop >= message.size()) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
 
+        String temp = "";
+        for(int i=start; i <= stop; ++i) {
+            temp += message.get(i);
+        }
+
+        ClipBdLinkedList<Character> clipMess = new ClipBdLinkedList<Character>();
+
+        for(int i=0; i<temp.length(); ++i) {
+            clipMess.insertAfter(clipMess.getLen()-1, temp.charAt(i));
+        }
+
+        clipBoards.put(clipNum, clipMess);
     }
 
     /**
@@ -490,6 +532,9 @@ public class Mix {
      * @param clipNum - clipboard index to paste from.
      */
     private void paste( int index, int clipNum) {
+
+        this.insertbefore( clipBoards.get(clipNum).toString(), index);
+
 
     }
     
